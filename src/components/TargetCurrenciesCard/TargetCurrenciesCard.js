@@ -32,9 +32,8 @@ const TargetCurrencyCard = (props) => {
     const [currency, setCurrency] = useState('');
     const [shouldButtonDisable, setShouldButtonDisable] = useState(false);
 
-    const [initTargetCurrency, setInitTargetCurrency] = useState(copyCurrencyCodeMap(currencyCodeNameMap.mapData));
+    const initTargetCurrency = copyCurrencyCodeMap(currencyCodeNameMap.mapData);
     const [activeTargetCurrency, setActiveTargetCurrency] = useState([]);
-
 
     function copyCurrencyCodeMap(mapArr) {
         let arr = [];
@@ -56,7 +55,15 @@ const TargetCurrencyCard = (props) => {
 
 
     const addCurrencyHandler = () => {
-        setActiveTargetCurrency(initTargetCurrency.find(item => item.code === currency))
+        const toAdd = initTargetCurrency.find(item => item.code === currency);
+        setActiveTargetCurrency([...activeTargetCurrency, toAdd]);
+    }
+
+    const removeCurrencyHandler = (itemCode) => {
+        const toRemove = activeTargetCurrency.find(item=>item.code===itemCode);
+        const updatedArr = activeTargetCurrency.filter(item=>item!==toRemove);
+
+        setActiveTargetCurrency(updatedArr);
     }
 
 
@@ -75,8 +82,9 @@ const TargetCurrencyCard = (props) => {
                             {initTargetCurrency.map((item) => {
                                 return (
                                     <MenuItem
-                                        key={item.id}
-                                        disabled={activeTargetCurrency.includes(item)}
+                                        key={item.code}
+                                        disabled={activeTargetCurrency
+                                                    .findIndex(activeItem=>activeItem.code===item.code)===-1?false: true}
                                         value={item.code}>
                                         {`${item.name} (${item.code})`}
                                     </MenuItem>
@@ -101,9 +109,11 @@ const TargetCurrencyCard = (props) => {
                 activeTargetCurrency
                     .map(item => (
                         <TargetCurrencyInnerItem
-                            key={item}
-                            currency={item.name}
-                            currencyValue={6} />
+                            key={item.code}
+                            currencyCode={item.code}
+                            currency={`${item.name} (${item.code})`}
+                            currencyValue={6}
+                            close={removeCurrencyHandler} />
                     ))
             }
         </Paper>

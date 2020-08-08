@@ -26,6 +26,11 @@ const useStyle = makeStyles((theme) => ({
         [theme.breakpoints.up('sm')]: {
             height: 120
         }
+    },
+    textFieldRoot: {
+        '& input[disabled]': {
+            color: 'black'
+        }
     }
 }))
 
@@ -36,17 +41,19 @@ const TargetCurrencyInnerItem = (props) => {
             <CardContent>
                 <Grid container justify="flex-end">
                     <Grid item>
-                        <CloseIcon />
+                        <CloseIcon onClick={()=>props.close(props.currencyCode)}/>
                     </Grid>
                 </Grid>
                 <FormControl classes={{ root: classes.fcCurrency }}>
                     <TextField
+                        classes={{root: classes.textFieldRoot}}
                         label="Currency Type"
                         value={props.currency}
                         disabled />
                 </FormControl>
                 <FormControl classes={{ root: classes.fcCurrency }}>
                     <TextField
+                        classes={{root: classes.textFieldRoot}}
                         label="Currency Value"
                         value={props.currencyValue}
                         disabled />
