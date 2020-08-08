@@ -18,7 +18,8 @@ const useStyle = makeStyles((theme) => ({
         marginRight: 20,
         [theme.breakpoints.down('xs')]: {
             minWidth: '100%',
-            maxWidth: '100%'
+            maxWidth: '100%',
+            marginBottom: 20
         }
     },
     menuItems: {
@@ -57,6 +58,7 @@ const SourceCurrencyCard = (props) => {
                 setIsError(true);
                 setErrorMessage('Incorrect Input')
             }
+            clearTimeout(timerRef.current)
         }, 100);        
     }
 
@@ -74,7 +76,7 @@ const SourceCurrencyCard = (props) => {
         <Paper classes={{ root: classes.paperRoot }} elevation={10}>
             <Typography variant="h5">Source Currency</Typography>
             <div style={{ marginTop: '20px' }}>
-                <form>
+                <form autoComplete="off">
                     <FormControl classes={{ root: classes.fcCurrency }}>
                         <InputLabel id="source-currency-select">Currency</InputLabel>
                         <Select
