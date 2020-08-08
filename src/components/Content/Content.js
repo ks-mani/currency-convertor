@@ -15,8 +15,8 @@ const Content = () => {
         const leftPadding = parseInt(window.getComputedStyle(containerRef.current).getPropertyValue('padding-left'));
         const rightPadding = parseInt(window.getComputedStyle(containerRef.current).getPropertyValue('padding-right'));
         const netWidth = wholeWidth - leftPadding - rightPadding;
-        if (netWidth >= 500) {
-            if(childWidth!==500) setChildWidth(500 + 'px')
+        if (netWidth >= 552) {
+            if(childWidth!==552) setChildWidth(552 + 'px')
         } else {
             setChildWidth(netWidth + 'px')
         }
