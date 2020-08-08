@@ -61,8 +61,8 @@ const TargetCurrencyCard = (props) => {
     }
 
     const removeCurrencyHandler = (itemCode) => {
-        const toRemove = activeTargetCurrency.find(item=>item.code===itemCode);
-        const updatedArr = activeTargetCurrency.filter(item=>item!==toRemove);
+        const toRemove = activeTargetCurrency.find(item => item.code === itemCode);
+        const updatedArr = activeTargetCurrency.filter(item => item !== toRemove);
 
         setActiveTargetCurrency(updatedArr);
     }
@@ -71,7 +71,10 @@ const TargetCurrencyCard = (props) => {
     return (
         <Paper classes={{ root: classes.paperRoot }} elevation={10}>
             <Typography variant="h5">Target Currencies</Typography>
-            <Grid container direction="row" justify="space-evenly" alignItems="center" style={{ marginTop: 20 }}>
+            <Grid container 
+                direction="row" 
+                justify="space-evenly" alignItems="center" 
+                style={{ marginTop: 20 }}>
                 <Grid item xs={12} sm={6}>
                     <FormControl classes={{ root: classes.fcCurrency }}>
                         <InputLabel id="source-currency-select">Currency</InputLabel>
@@ -85,7 +88,7 @@ const TargetCurrencyCard = (props) => {
                                     <MenuItem
                                         key={item.code}
                                         disabled={activeTargetCurrency
-                                                    .findIndex(activeItem=>activeItem.code===item.code)===-1?false: true}
+                                            .findIndex(activeItem => activeItem.code === item.code) === -1 ? false : true}
                                         value={item.code}>
                                         {`${item.name} (${item.code})`}
                                     </MenuItem>
@@ -113,7 +116,7 @@ const TargetCurrencyCard = (props) => {
                             key={item.code}
                             currencyCode={item.code}
                             currency={`${item.name} (${item.code})`}
-                            currencyValue={(props.conversionRate[item.code]*props.baseValue).toFixed(2)}
+                            currencyValue={(props.conversionRate[item.code] * props.baseValue).toFixed(2)}
                             close={removeCurrencyHandler} />
                     ))
             }

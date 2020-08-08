@@ -9,16 +9,8 @@ import currAxios from '../../utils/currApiAxiosInstance.js'
 import { lightBlue } from '@material-ui/core/colors';
 
 
-const Content = () => {
-    const containerRef = useRef();
+const useWidthSetterHook = (containerRef) => {
     const [childWidth, setChildWidth] = useState('0px');
-
-    const [currencyCode, setCurrencyCode] = useState('');
-    const [currencyValue, setCurrencyValue] = useState(1);
-    const [conversionRate, setConversionRates] = useState(null);
-    const [isRateFetchError, setIsRateFetchError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
     const timerId = useRef(null);
     const setWidthFunc = useCallback(() => {
         const wholeWidth = containerRef.current.offsetWidth;
@@ -30,7 +22,7 @@ const Content = () => {
         } else {
             setChildWidth(netWidth + 'px')
         }
-    }, [childWidth])
+    }, [childWidth, containerRef])
 
     const widthCallback = useCallback(() => {
         if (timerId.current) {
@@ -50,6 +42,20 @@ const Content = () => {
         }
     }, [setWidthFunc, widthCallback])
 
+    return childWidth;
+}
+
+
+const Content = () => {
+    const containerRef = useRef();
+    const childWidth = useWidthSetterHook(containerRef);
+
+    const [currencyCode, setCurrencyCode] = useState('');
+    const [currencyValue, setCurrencyValue] = useState(1);
+    const [conversionRate, setConversionRates] = useState(null);
+    const [isRateFetchError, setIsRateFetchError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         if (currencyCode !== '') {
             setIsLoading(true);
@@ -68,15 +74,22 @@ const Content = () => {
 
     return (
         <Container fixed ref={containerRef}>
-            <Grid container direction="column" justify="center" alignItems="center">
+            <Grid container
+                direction="column" justify="center" alignItems="center">
                 <Grid item>
-                    <SourceCurrencyCard width={childWidth} setCurrCode={setCurrencyCode} setCurrValue={setCurrencyValue} />
+                    <SourceCurrencyCard
+                        width={childWidth}
+                        setCurrCode={setCurrencyCode}
+                        setCurrValue={setCurrencyValue} />
                 </Grid>
                 <Grid item>
-                    {isLoading ? (isRateFetchError?<h5>An Error occured</h5>:<Spinner />) : 
-                        <TargetCurrenciesCard 
-                            width={childWidth} 
-                            conversionRate={conversionRate} 
+                    {isLoading ?
+                        (isRateFetchError ?
+                            <h5>An Error occured</h5> :
+                            <Spinner />) :
+                        <TargetCurrenciesCard
+                            width={childWidth}
+                            conversionRate={conversionRate}
                             baseValue={currencyValue} />}
                 </Grid>
             </Grid>

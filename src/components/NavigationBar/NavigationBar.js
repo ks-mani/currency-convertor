@@ -15,7 +15,8 @@ const NavigationBar = (props) => {
         <>
             <AppBar position="static">
                 <Toolbar>
-                    <Grid container justify="flex-end" alignItems="center" spacing={4}>
+                    <Grid container
+                        justify="flex-end" alignItems="center" spacing={4}>
                         <Grid item>
                             <Typography variant="body1">Welcome Mani Kumar!</Typography>
                         </Grid>
@@ -23,7 +24,9 @@ const NavigationBar = (props) => {
                             <Button
                                 variant="outlined"
                                 color="secondary"
-                                classes={{ root: classes.buttonRoot }}>Logout</Button>
+                                classes={{ root: classes.buttonRoot }}>
+                                Logout
+                            </Button>
                         </Grid>
                     </Grid>
                 </Toolbar>

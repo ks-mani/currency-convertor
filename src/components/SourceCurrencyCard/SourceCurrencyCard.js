@@ -13,9 +13,18 @@ const useStyle = makeStyles((theme) => ({
         borderBottom: '15px solid ' + lightBlue[500]
     }),
     fcCurrency: {
+        minWidth: 260,
+        maxWidth: 260,
+        marginRight: 20,
+        [theme.breakpoints.down('xs')]: {
+            minWidth: '100%',
+            maxWidth: '100%',
+            marginBottom: 20
+        }
+    },
+    fcCurrency2: {
         minWidth: 200,
         maxWidth: 200,
-        marginRight: 20,
         [theme.breakpoints.down('xs')]: {
             minWidth: '100%',
             maxWidth: '100%',
@@ -32,10 +41,9 @@ const SourceCurrencyCard = (props) => {
 
     const [currency, setCurrency] = useState('');
     const [currencyValue, setCurrencyValue] = useState(1);
-
     const [isError, setIsError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('')
-    
+
     const timerRef = useRef(null);
 
     const currencyChangeHandler = (event) => {
@@ -46,11 +54,11 @@ const SourceCurrencyCard = (props) => {
     const currencyValueChangeHandler = (event) => {
         event.preventDefault();
         const value = event.target.value;
-        if(timerRef.current){
+        if (timerRef.current) {
             clearTimeout(timerRef.current)
         }
         timerRef.current = setTimeout(() => {
-            if(validateTheInput(value)){
+            if (validateTheInput(value)) {
                 setIsError(false);
                 setErrorMessage('');
                 setCurrencyValue(value);
@@ -59,26 +67,33 @@ const SourceCurrencyCard = (props) => {
                 setErrorMessage('Incorrect Input')
             }
             clearTimeout(timerRef.current)
-        }, 100);        
+        }, 100);
     }
 
-    function validateTheInput(value){
-        let flag = true;
-        for(let i=0;i<value.length;i++){
-            if(value.charCodeAt(i)<=47 || value.charCodeAt(i)>=58){
+    function validateTheInput(value) {
+        let flag = true, isPointThere = false;
+        for (let i = 0; i < value.length; i++) {
+            if (value.charCodeAt(i) === 46) {
+                if (!isPointThere) isPointThere = true
+                else {
+                    flag = false;
+                    break;
+                }
+            } else if (value.charCodeAt(i) <= 47 || value.charCodeAt(i) >= 58) {
                 flag = false;
+                break;
             }
         }
         return flag;
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         props.setCurrCode(currency);
-    },[currency, props])
+    }, [currency, props])
 
-    useEffect(()=>{
+    useEffect(() => {
         props.setCurrValue(currencyValue);
-    },[currencyValue, props])
+    }, [currencyValue, props])
 
     return (
         <Paper classes={{ root: classes.paperRoot }} elevation={10}>
@@ -86,7 +101,10 @@ const SourceCurrencyCard = (props) => {
             <div style={{ marginTop: '20px' }}>
                 <form autoComplete="off">
                     <FormControl classes={{ root: classes.fcCurrency }}>
-                        <InputLabel id="source-currency-select">Currency</InputLabel>
+                        <InputLabel
+                            id="source-currency-select">
+                            Currency
+                        </InputLabel>
                         <Select
                             labelId="source-currency-select"
                             value={currency}
@@ -94,18 +112,22 @@ const SourceCurrencyCard = (props) => {
                             onChange={currencyChangeHandler}>
                             {currencyCodeNameMap.mapData.map((item, index) => {
                                 return (
-                                    <MenuItem key={item.id} value={item.code}>{`${item.name} (${item.code})`}</MenuItem>
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.code}>
+                                        {`${item.name} (${item.code})`}
+                                    </MenuItem>
                                 )
                             })}
                         </Select>
                     </FormControl>
-                    <FormControl classes={{ root: classes.fcCurrency }}>
-                        <TextField 
-                            label="Currency Value" 
-                            defaultValue={currencyValue} 
+                    <FormControl classes={{ root: classes.fcCurrency2 }}>
+                        <TextField
+                            label="Currency Value"
+                            defaultValue={currencyValue}
                             error={isError}
-                            helperText={isError? errorMessage: null}
-                            onChange={currencyValueChangeHandler}/>
+                            helperText={isError ? errorMessage : null}
+                            onChange={currencyValueChangeHandler} />
                     </FormControl>
 
                 </form>
