@@ -1,5 +1,5 @@
 import React, { useRef, useState, useLayoutEffect, useCallback, useEffect } from 'react';
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid, Typography, Card, CardContent } from '@material-ui/core';
 import { CircularProgress } from '@material-ui/core';
 
 import SourceCurrencyCard from '../SourceCurrencyCard/SourceCurrencyCard'
@@ -76,6 +76,15 @@ const Content = () => {
         <Container fixed ref={containerRef}>
             <Grid container
                 direction="column" justify="center" alignItems="center">
+                <Grid item>
+                    <Card style={{ width: childWidth, marginTop: 10 }} >
+                        <CardContent>
+                            <Typography variant="caption" color="textSecondary">
+                                Note : First select source currency and then target currency to unlock "Add Currency" Button
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
                 <Grid item>
                     <SourceCurrencyCard
                         width={childWidth}

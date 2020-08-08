@@ -49,15 +49,17 @@ const TargetCurrencyCard = (props) => {
     }
 
     useEffect(() => {
-        if (currency === '') setShouldButtonDisable(true)
+        if (currency === '' || !props.conversionRate) setShouldButtonDisable(true)
         else setShouldButtonDisable(false)
-    }, [currency])
+    }, [currency,props.conversionRate])
 
 
     const addCurrencyHandler = () => {
-        const toAdd = initTargetCurrency.find(item => item.code === currency);
-        setActiveTargetCurrency([...activeTargetCurrency, toAdd]);
-        setCurrency('');
+        if (props.conversionRate) {
+            const toAdd = initTargetCurrency.find(item => item.code === currency);
+            setActiveTargetCurrency([...activeTargetCurrency, toAdd]);
+            setCurrency('');
+        }
     }
 
     const removeCurrencyHandler = (itemCode) => {
@@ -71,9 +73,9 @@ const TargetCurrencyCard = (props) => {
     return (
         <Paper classes={{ root: classes.paperRoot }} elevation={10}>
             <Typography variant="h5">Target Currencies</Typography>
-            <Grid container 
-                direction="row" 
-                justify="space-evenly" alignItems="center" 
+            <Grid container
+                direction="row"
+                justify="space-evenly" alignItems="center"
                 style={{ marginTop: 20 }}>
                 <Grid item xs={12} sm={6}>
                     <FormControl classes={{ root: classes.fcCurrency }}>
