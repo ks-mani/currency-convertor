@@ -5,6 +5,7 @@ import './index.css'
 import * as serviceWorker from './serviceWorker';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { grey } from '@material-ui/core/colors';
 
 
 const customTheme = createMuiTheme({
@@ -22,7 +23,7 @@ const customTheme = createMuiTheme({
       light:'#ffee58',
       main: '#ffeb3b',
       dark:'#fdd835',
-      contrastText: '#000'
+      contrastText: grey[700]
     }
   }
 });
