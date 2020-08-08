@@ -93,7 +93,6 @@ const SourceCurrencyCard = (props) => {
                     </FormControl>
                     <FormControl classes={{ root: classes.fcCurrency }}>
                         <TextField 
-                            id="standard-basic" 
                             label="Currency Value" 
                             defaultValue={currencyValue} 
                             error={isError}

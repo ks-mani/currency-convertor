@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Paper, makeStyles, Typography, Button, FormControl, InputLabel, MenuItem, TextField, Select, Card, CardContent, Grid } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Paper, makeStyles, Typography, Button, FormControl, Select, InputLabel, MenuItem, Grid } from '@material-ui/core';
 import { lightBlue } from '@material-ui/core/colors';
-import CloseIcon from '@material-ui/icons/Close';
+import TargetCurrencyInnerItem from './TargetCurrencyInnerItem/TargetCurrencyInnerItem'
 
 import { currencyCodeNameMap } from '../../utils/currencyCodeNameMap.js'
 
@@ -13,33 +13,16 @@ const useStyle = makeStyles((theme) => ({
         boxSizing: 'border-box',
         borderBottom: '15px solid ' + lightBlue[500]
     }),
-    buttonRoot: {
-        textTransform: 'capitalize',
-        fontWeight: 600,
-        marginTop: 40
-    },
     fcCurrency: {
-        minWidth: 200,
-        maxWidth: 200,
-        marginRight: 20,
+        minWidth: '100%',
+        maxWidth: '100%',
         [theme.breakpoints.down('xs')]: {
-            minWidth: '100%',
-            maxWidth: '100%',
             marginBottom: 20
         }
     },
-    menuItems: {
-        maxHeight: '400px'
-    },
-    cardRoot: {
-        position: 'relative',
-        marginTop: 20,
-        [theme.breakpoints.down('xs')]: {
-            height: 200
-        },
-        [theme.breakpoints.up('sm')]: {
-            height: 150
-        }
+    buttonRoot: {
+        textTransform: 'capitalize',
+        fontWeight: 600,
     }
 }))
 
@@ -47,24 +30,41 @@ const TargetCurrencyCard = (props) => {
     const classes = useStyle({ width: props.width });
 
     const [currency, setCurrency] = useState('');
-    const [currencyValue, setCurrencyValue] = useState(1);
+    const [shouldButtonDisable, setShouldButtonDisable] = useState(false);
+
+    const [initTargetCurrency, setInitTargetCurrency] = useState(copyCurrencyCodeMap(currencyCodeNameMap.mapData));
+    const [activeTargetCurrency, setActiveTargetCurrency] = useState([]);
+
+
+    function copyCurrencyCodeMap(mapArr) {
+        let arr = [];
+        for (let elem of mapArr) {
+            arr.push({ ...elem });
+        }
+        return arr;
+    }
 
     const currencyChangeHandler = (event) => {
         event.preventDefault();
         setCurrency(event.target.value);
     }
 
+    useEffect(() => {
+        if (currency === '') setShouldButtonDisable(true)
+        else setShouldButtonDisable(false)
+    }, [currency])
+
+
+    const addCurrencyHandler = () => {
+        setActiveTargetCurrency(initTargetCurrency.find(item => item.code === currency))
+    }
+
 
     return (
         <Paper classes={{ root: classes.paperRoot }} elevation={10}>
             <Typography variant="h5">Target Currencies</Typography>
-            <Card classes={{ root: classes.cardRoot }} raised>
-                <CardContent>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <CloseIcon />
-                        </Grid>
-                    </Grid>
+            <Grid container direction="row" justify="space-evenly" alignItems="center" style={{ marginTop: 20 }}>
+                <Grid item xs={12} sm={6}>
                     <FormControl classes={{ root: classes.fcCurrency }}>
                         <InputLabel id="source-currency-select">Currency</InputLabel>
                         <Select
@@ -72,23 +72,40 @@ const TargetCurrencyCard = (props) => {
                             value={currency}
                             MenuProps={{ classes: { paper: classes.menuItems } }}
                             onChange={currencyChangeHandler}>
-                            {currencyCodeNameMap.mapData.map((item, index) => {
+                            {initTargetCurrency.map((item) => {
                                 return (
-                                    <MenuItem key={item.id} value={item.code}>{`${item.name} (${item.code})`}</MenuItem>
+                                    <MenuItem
+                                        key={item.id}
+                                        disabled={activeTargetCurrency.includes(item)}
+                                        value={item.code}>
+                                        {`${item.name} (${item.code})`}
+                                    </MenuItem>
                                 )
                             })}
                         </Select>
                     </FormControl>
-                    <FormControl classes={{ root: classes.fcCurrency }}>
-                        <TextField
-                            id="standard-basic"
-                            label="Currency Value"
-                            value={currencyValue}
-                            disabled />
-                    </FormControl>
-                </CardContent>
-            </Card>
-            <Button variant="contained" color="secondary" classes={{ root: classes.buttonRoot }}>Add Currency</Button>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        classes={{ root: classes.buttonRoot }}
+                        disabled={shouldButtonDisable}
+                        onClick={addCurrencyHandler}>
+                        Add Currency
+                    </Button>
+                </Grid>
+            </Grid>
+
+            {
+                activeTargetCurrency
+                    .map(item => (
+                        <TargetCurrencyInnerItem
+                            key={item}
+                            currency={item.name}
+                            currencyValue={6} />
+                    ))
+            }
         </Paper>
     );
 }
