@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Paper, makeStyles, Typography, FormControl, InputLabel, Select, MenuItem, TextField } from '@material-ui/core';
 
 import { currencyCodeNameMap } from '../../utils/currencyCodeNameMap.js'
@@ -65,12 +65,20 @@ const SourceCurrencyCard = (props) => {
     function validateTheInput(value){
         let flag = true;
         for(let i=0;i<value.length;i++){
-            if(value.charCodeAt(i)<=48 || value.charCodeAt(i)>=58){
+            if(value.charCodeAt(i)<=47 || value.charCodeAt(i)>=58){
                 flag = false;
             }
         }
         return flag;
     }
+
+    useEffect(()=>{
+        props.setCurrCode(currency);
+    },[currency, props])
+
+    useEffect(()=>{
+        props.setCurrValue(currencyValue);
+    },[currencyValue, props])
 
     return (
         <Paper classes={{ root: classes.paperRoot }} elevation={10}>

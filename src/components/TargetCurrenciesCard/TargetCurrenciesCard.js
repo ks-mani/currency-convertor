@@ -57,6 +57,7 @@ const TargetCurrencyCard = (props) => {
     const addCurrencyHandler = () => {
         const toAdd = initTargetCurrency.find(item => item.code === currency);
         setActiveTargetCurrency([...activeTargetCurrency, toAdd]);
+        setCurrency('');
     }
 
     const removeCurrencyHandler = (itemCode) => {
@@ -112,7 +113,7 @@ const TargetCurrencyCard = (props) => {
                             key={item.code}
                             currencyCode={item.code}
                             currency={`${item.name} (${item.code})`}
-                            currencyValue={6}
+                            currencyValue={(props.conversionRate[item.code]*props.baseValue).toFixed(2)}
                             close={removeCurrencyHandler} />
                     ))
             }
