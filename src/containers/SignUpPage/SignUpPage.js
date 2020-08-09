@@ -1,6 +1,7 @@
 import React from 'react'
 import authBasicLayout from '../../higherOrderComponent/authBasicLayout'
-import { withStyles, Grid, FormControl, TextField, Button, Typography } from '@material-ui/core'
+import { withStyles, Grid, FormControl, TextField, Button, Typography, Link } from '@material-ui/core'
+import { NavLink } from 'react-router-dom';
 
 const styles = {
     formControl: {
@@ -49,6 +50,14 @@ class SignUpPage extends React.Component {
                 }
                 <Grid item xs={12}>
                     <Button classes={{ root: this.classes.submitButton }} variant="contained" color="secondary">Submit</Button>
+                </Grid>
+                <Grid item container style={{marginTop: '20px'}} justify="space-evenly">
+                    <Grid item justify="center">
+                        <Link component={NavLink} to="/signIn">Sign In?</Link>
+                    </Grid>
+                    <Grid item justify="center">
+                        <Link component={NavLink} to="/forgotPwd">Forgot Password?</Link>
+                    </Grid>
                 </Grid>
             </Grid>
         )
