@@ -40,6 +40,7 @@ class SignUpPage extends React.Component {
             shouldButtonDisable: true,
             submitError: false,
             submitErrorMessage: '',
+            submitSuccess: false,
             handlers: {
                 firstName: this.firstNameHandler.bind(this),
                 lastName: this.lastNameHandler.bind(this),
@@ -98,6 +99,7 @@ class SignUpPage extends React.Component {
                 password: this.state.password,
             })
             localStorage.setItem('data', JSON.stringify(userData));
+            this.setState({submitError: false, submitErrorMessage: '', submitSuccess: true});
         }
     }
 
@@ -133,6 +135,11 @@ class SignUpPage extends React.Component {
                 {this.state.submitError ? (
                     <Grid item xs={12}>
                         <Typography variant="caption" color="error">{this.state.submitErrorMessage}</Typography>
+                    </Grid>
+                ) : null}
+                {this.state.submitSuccess ? (
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="primary">"User Added Succesfully"</Typography>
                     </Grid>
                 ) : null}
                 <Grid item>
