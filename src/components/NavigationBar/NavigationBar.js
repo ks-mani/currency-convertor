@@ -14,7 +14,7 @@ const NavigationBar = (props) => {
     const classes = useStyle();
     const logoutHandler = ()=>{
         props.logout();
-        props.history.pushState('/');
+        props.history.push('/');
     }
     return (
         <>
