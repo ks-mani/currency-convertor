@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 
 const useStyle = makeStyles({
     buttonRoot: {
@@ -11,6 +12,10 @@ const useStyle = makeStyles({
 
 const NavigationBar = (props) => {
     const classes = useStyle();
+    const logoutHandler = ()=>{
+        props.logout();
+        props.history.pushState('/');
+    }
     return (
         <>
             <AppBar position="static">
@@ -18,13 +23,14 @@ const NavigationBar = (props) => {
                     <Grid container
                         justify="flex-end" alignItems="center" spacing={4}>
                         <Grid item>
-                            <Typography variant="body1">Welcome Mani Kumar!</Typography>
+                            <Typography variant="body1">Welcome {props.name}!</Typography>
                         </Grid>
                         <Grid item>
                             <Button
                                 variant="outlined"
                                 color="secondary"
-                                classes={{ root: classes.buttonRoot }}>
+                                classes={{ root: classes.buttonRoot }}
+                                onClick={logoutHandler}>
                                 Logout
                             </Button>
                         </Grid>
@@ -35,4 +41,4 @@ const NavigationBar = (props) => {
     )
 }
 
-export default NavigationBar;
+export default withRouter(NavigationBar);

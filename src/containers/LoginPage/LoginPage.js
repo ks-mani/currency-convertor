@@ -1,7 +1,8 @@
 import React from 'react'
 import authBasicLayout from '../../higherOrderComponent/authBasicLayout'
 import { FormControl, TextField, withStyles, Grid, Button, Typography, Link } from '@material-ui/core'
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 
 const styles = {
@@ -50,7 +51,9 @@ class LoginPage extends React.Component {
         if (userData.findIndex(item => item.emailId === this.state.emailId && item.password === this.state.password) === -1) {
             this.setState({ submitError: true, submitErrorMessage: 'User does not exist. Sign Up!' });
         } else {
-            //Do the signIn
+            const user = userData.find(item => item.emailId === this.state.emailId && item.password === this.state.password)
+            this.props.login(user.id, user.firstName)
+            this.props.history.push('/home')
         }
     }
 
@@ -121,5 +124,11 @@ class LoginPage extends React.Component {
     }
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        login: (id, username) => dispatch({ type: 'LOGIN', activeId: id, activeUser: username }),
+    }
+}
 
-export default authBasicLayout(withStyles(styles)(LoginPage))
+export default authBasicLayout(withStyles(styles)(connect(null, mapDispatchToProps)(withRouter(LoginPage))))
+
