@@ -38,6 +38,8 @@ class SignUpPage extends React.Component {
             error: false,
             errorMessage: '',
             shouldButtonDisable: true,
+            submitError: false,
+            submitErrorMessage: '',
             handlers: {
                 firstName: this.firstNameHandler.bind(this),
                 lastName: this.lastNameHandler.bind(this),
@@ -46,6 +48,8 @@ class SignUpPage extends React.Component {
                 confirmPassword: this.confirmPasswordHandler.bind(this)
             }
         };
+
+        this.submitHandler = this.submitHandler.bind(this);
     }
 
     firstNameHandler(event) {
@@ -77,6 +81,26 @@ class SignUpPage extends React.Component {
         this.setState({ confirmPassword: confirmPasswordValue })
     }
 
+    submitHandler(event) {
+        event.preventDefault();
+        let userData = JSON.parse(localStorage.getItem('data'));
+        if (userData === null) {
+            userData = [];
+        }
+        if (userData.findIndex(item => item.emailId === this.state.emailId) !== -1) {
+            this.setState({ submitError: true, submitErrorMessage: 'User already exists' });
+        } else {
+            userData.push({
+                id: Date.now(),
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                emailId: this.state.emailId,
+                password: this.state.password,
+            })
+            localStorage.setItem('data', JSON.stringify(userData));
+        }
+    }
+
     componentDidUpdate() {
         if (this.state.shouldButtonDisable) {
             if (this.state.firstName !== '' && this.state.lastName !== '' && this.state.emailId !== '' && this.state.password !== '' && this.state.confirmPassword !== '') {
@@ -106,6 +130,11 @@ class SignUpPage extends React.Component {
     render() {
         return (
             <Grid container>
+                {this.state.submitError ? (
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="error">{this.state.submitErrorMessage}</Typography>
+                    </Grid>
+                ) : null}
                 <Grid item>
                     <Typography variant="h6">Sign Up</Typography>
                 </Grid>
@@ -114,7 +143,7 @@ class SignUpPage extends React.Component {
                         if (regItem.code === 'confirmPassword') {
                             return (
                                 <Grid item xs={12} key={regItem.code}>
-                                    <FormControl 
+                                    <FormControl
                                         classes={{ root: this.classes.formControl }}>
                                         <TextField
                                             type={regItem.type}
@@ -129,7 +158,7 @@ class SignUpPage extends React.Component {
                         } else {
                             return (
                                 <Grid item xs={12} key={regItem.code}>
-                                    <FormControl 
+                                    <FormControl
                                         classes={{ root: this.classes.formControl }}>
                                         <TextField
                                             type={regItem.type}
@@ -147,11 +176,12 @@ class SignUpPage extends React.Component {
                         classes={{ root: this.classes.submitButton }}
                         disabled={this.state.shouldButtonDisable}
                         variant="contained"
-                        color="secondary">
+                        color="secondary"
+                        onClick={this.submitHandler}>
                         Submit
                     </Button>
                 </Grid>
-                <Grid item 
+                <Grid item
                     container style={{ marginTop: '20px' }} justify="space-evenly">
                     <Grid item>
                         <Link component={NavLink} to="/signIn">Sign In?</Link>

@@ -27,6 +27,7 @@ class LoginPage extends React.Component {
         this.classes = this.props.classes
         this.emailIdHandler = this.emailIdHandler.bind(this);
         this.passwordHandler = this.passwordHandler.bind(this);
+        this.submitHandler = this.submitHandler.bind(this);
     }
 
     emailIdHandler(event) {
@@ -41,26 +42,43 @@ class LoginPage extends React.Component {
         this.setState({ password: passwordValue })
     }
 
+    submitHandler(event) {
+        let userData = JSON.parse(localStorage.getItem('data'));
+        if (userData === null) {
+            this.setState({ submitError: true, submitErrorMessage: 'User does not exist. Sign Up!' });
+        }
+        if (userData.findIndex(item => item.emailId === this.state.emailId && item.password === this.state.password) === -1) {
+            this.setState({ submitError: true, submitErrorMessage: 'User does not exist. Sign Up!' });
+        } else {
+            //Do the signIn
+        }
+    }
+
     componentDidUpdate() {
-        if(this.state.shouldButtonDisable){
-            if(this.state.emailId!=='' && this.state.password!==''){
-                this.setState({shouldButtonDisable: false})
+        if (this.state.shouldButtonDisable) {
+            if (this.state.emailId !== '' && this.state.password !== '') {
+                this.setState({ shouldButtonDisable: false })
             }
         } else {
-            if(this.state.emailId==='' || this.state.password===''){
-                this.setState({shouldButtonDisable: true})
+            if (this.state.emailId === '' || this.state.password === '') {
+                this.setState({ shouldButtonDisable: true })
             }
-        } 
+        }
     }
 
     render() {
         return (
             <Grid container>
+                {this.state.submitError ? (
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="error">{this.state.submitErrorMessage}</Typography>
+                    </Grid>
+                ) : null}
                 <Grid item>
                     <Typography variant="h6">Sign In</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <FormControl 
+                    <FormControl
                         classes={{ root: this.classes.formControl }}>
                         <TextField
                             type="emailId"
@@ -70,7 +88,7 @@ class LoginPage extends React.Component {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                    <FormControl 
+                    <FormControl
                         classes={{ root: this.classes.formControl }}>
                         <TextField
                             type="password"
@@ -82,13 +100,14 @@ class LoginPage extends React.Component {
                 <Grid item xs={12}>
                     <Button
                         classes={{ root: this.classes.submitButton }}
-                        disabled = {this.state.shouldButtonDisable}
+                        disabled={this.state.shouldButtonDisable}
                         variant="contained"
-                        color="secondary">
+                        color="secondary"
+                        onClick={this.submitHandler}>
                         Submit
                     </Button>
                 </Grid>
-                <Grid item 
+                <Grid item
                     container style={{ marginTop: '20px' }} justify="space-evenly">
                     <Grid item>
                         <Link component={NavLink} to="/signUp">Sign Up?</Link>

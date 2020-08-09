@@ -25,11 +25,15 @@ class ForgotPassword extends React.Component {
             confirmPassword: '',
             error: false,
             errorMessage: '',
+            submitError: false,
+            submitErrorMessage: '',
+            submitSuccess: false,
             shouldButtonDisable: true
         };
         this.emailIdHandler = this.emailIdHandler.bind(this);
         this.passwordHandler = this.passwordHandler.bind(this);
         this.confirmPasswordHandler = this.confirmPasswordHandler.bind(this);
+        this.submitHandler = this.submitHandler.bind(this);
     }
 
     emailIdHandler(event) {
@@ -48,6 +52,24 @@ class ForgotPassword extends React.Component {
         event.preventDefault();
         const confirmPasswordValue = event.target.value;
         this.setState({ confirmPassword: confirmPasswordValue })
+    }
+
+    submitHandler(event) {
+        event.preventDefault();
+        let userData = JSON.parse(localStorage.getItem('data'));
+        if (userData === null) {
+            this.setState({ submitError: true, submitErrorMessage: 'User does not exist. Sign Up!' });
+        }
+        if (userData.findIndex(item => item.emailId === this.state.emailId) === -1) {
+            this.setState({ submitError: true, submitErrorMessage: 'User does not exist. Sign Up!' });
+        } else {
+            let elemToChange = userData.find(item => item.emailId === this.state.emailId)
+            let updatedArray = userData.filter(item=>item.emailId !== this.state.emailId);
+            
+            updatedArray = [...updatedArray, {...elemToChange, password: this.state.password}]
+            localStorage.setItem('data', JSON.stringify(updatedArray));
+            this.setState({submitError: false, submitErrorMessage: '', submitSuccess: true})
+        }
     }
 
     componentDidUpdate() {
@@ -80,6 +102,16 @@ class ForgotPassword extends React.Component {
     render() {
         return (
             <Grid container>
+                {this.state.submitError ? (
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="error">{this.state.submitErrorMessage}</Typography>
+                    </Grid>
+                ) : null}
+                {this.state.submitSuccess ? (
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="primary">"Password Changed Succesfully"</Typography>
+                    </Grid>
+                ) : null}
                 <Grid item>
                     <Typography variant="h6">Set New Password</Typography>
                 </Grid>
@@ -118,7 +150,8 @@ class ForgotPassword extends React.Component {
                         classes={{ root: this.classes.submitButton }}
                         disabled={this.state.shouldButtonDisable}
                         variant="contained"
-                        color="secondary">
+                        color="secondary"
+                        onClick={this.submitHandler}>
                         Submit
                     </Button>
                 </Grid>
