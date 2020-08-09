@@ -4,8 +4,12 @@ import { lightBlue } from '@material-ui/core/colors';
 
 const styles = {
     cardRoot: {
-        backgroundColor: lightBlue[600]
+        borderBottom: '20px solid '+lightBlue[600],
+        padding: 30
     },
+    containerRoot: {
+        marginTop: 30
+    }
 };
 
 
@@ -18,10 +22,10 @@ function authBasicLayout(WrappedComponent) {
 
         render() {
             return (
-                <Container >
+                <Container classes={{root: this.classes.containerRoot}}>
                     <Grid container justify="center">
                         <Grid item xs={12} sm={6}>
-                            <Card classes={{ root: this.classes.cardRoot }}>
+                            <Card classes={{ root: this.classes.cardRoot }} raised>
                                 <WrappedComponent />
                             </Card>
                         </Grid>

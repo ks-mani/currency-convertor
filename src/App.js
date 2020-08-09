@@ -7,9 +7,9 @@ import ForgotPassword from './containers/ForgotPassword/ForgotPassword'
 function App() {
   return (
     <>
-      <LoginPage></LoginPage>
+      {/* <LoginPage></LoginPage> */}
       <SignUpPage></SignUpPage>
-      <ForgotPassword></ForgotPassword>
+      {/* <ForgotPassword></ForgotPassword> */}
       {/* <MainLayout /> */}
     </>
   );
